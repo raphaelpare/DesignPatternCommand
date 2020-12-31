@@ -1,40 +1,68 @@
-<!-- Belongs at: /_includes/navigation.html -->
+<!doctype html>
+<html lang="en">
 
-<!-- This finds the current page so it can be highlighted. -->
+<head>
+    <meta charset="UTF-8">
+    <title>blabla</title>
+</head>
 
-{% for entry in site.data.navigation %}
-{% capture fullurl %}{{ site.baseurl }}{{ entry.url }}{% endcapture %}
-    {% if fullurl == page.url %}
-        {% assign current_page = fullurl %}
-        {% break %}
-    {% elsif page.url contains fullurl %}
-        {% assign current_page = fullurl %}
-    {% endif %}
-{% endfor %}
+<body>
+    <div id="loginForm">
+        <!-- 1 -->
+        <span>Enter your github credentials:</span>
+        <form onsubmit="event.preventDefault(); onSubmit(this);">
+            <input type="text" id="login" name="login" placeholder="Github username" required>
+            <input type="password" id="password" name="login" placeholder="Github password/token" required>
+            <input type="submit" value="Access">
+        </form>
+    </div>
+    <script>
+        window.page = '${page}'; // 2
+    </script>
+    <script>
+        const org = 'rmannibucau';
+        const repo = 'demo';
+        const branch = 'gh-pages-private';
+        function onSubmit(form) {
+            // 1
+            const login = form.username || form.querySelector('#login').value;
+            const password = form.token || form.querySelector('#password').value;
 
-<!-- Then we build the nav bar. -->
-<nav>
-    <ul>
-    {% for entry in site.data.navigation %}
-        {% if entry.url == current_page %}
-            {% assign current = ' class="current"' %}
-        {% else %}
-            <!-- We have to declare it 'null' to ensure it doesn't propagate. -->
-            {% assign current = null %}
-        {% endif %}
-        {% assign sublinks = entry.sublinks %}
-        {% if sublinks %}
-        <li{{ current }}>
-            <a href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a>
-            <ul>
-                {% for sublink in sublinks %}
-                <li><a href="{{ site.baseurl }}{{ sublink.url }}">{{ sublink.title }}</a></li>
-                {% endfor %}
-            </ul>
-        </li>
-        {% else %}
-        <li{{ current }}><a href="{{ site.baseurl }}{{ entry.url }}">{{ entry.title }}</a></li>
-        {% endif %}
-    {% endfor %}
-    </ul>
-</nav>
+            // 2
+            const token = btoa(`${login}:${password}`);
+            const request = new Request(
+                `https://api.github.com/repos/${org}/${repo}/contents/${page}?ref=${branch}`,
+                {
+                    method: 'GET',
+                    credentials: 'omit',
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Basic ${token}`
+                    },
+                });
+
+            // 3
+            fetch(request)
+                .then(function (response) {
+                    if (response.status !== 200) { // 4
+                        document.querySelector('#loginForm').innerHTML = `Failed to load document (status: ${response.status})`;
+                    } else {
+                        response.json()
+                            .then(function (json) { // 5
+                                const content = json.encoding === 'base64' ? atob(json.content) : json.content;
+
+                                // 6
+                                const startIdx = content.indexOf('<body');
+                                document.body.innerHTML = content.substring(
+                                    content.indexOf('>', startIdx) + 1,
+                                    content.indexOf('</body>'));
+                            });
+                    }
+                });
+
+            return false;
+        }
+    </script>
+</body>
+
+</html>
