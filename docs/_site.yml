@@ -1,0 +1,20 @@
+name: "TEST TEST"
+output_dir: "."
+navbar:
+  title: "navbar title"
+  type: inverse
+  left:
+    #- text: "Documentation"
+    - text: "test tutorial"
+      href: 001-blabla.md
+    - text: "test2 scenarios"
+      href: 001-blabla.md
+  right:
+    - icon: fa-envelope fa-lg
+      href: https://github.com/LEEClab/SpatIS#contact
+    - icon: fa-github fa-lg
+      href: https://github.com/LEEClab/SpatIS
+output:
+  html_document:
+    theme: paper
+    css: styles.css
