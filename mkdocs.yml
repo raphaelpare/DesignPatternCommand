@@ -1,0 +1,48 @@
+# Project information
+site_name: Test documentation
+site_description: "The documentation test"
+site_url: "http://raphaelpare.github.io/DesignPatternCommand/"
+site_author: "Raphael PARE"
+
+# Repository
+repo_name: "raphaelpare/DesignPatternCommand"
+repo_url: "http://raphaelpare.github.io/DesignPatternCommand/"
+
+# Copyright
+copyright: "Copyright &copy;"
+
+# Configuration
+theme:
+  name: "material"
+  palette:
+    primary: "deep orange"
+    accent: "blue"
+  font:
+    text: "Noto Sans"
+    code: "Roboto Mono"
+  logo:
+    icon: "book"
+markdown_extensions:
+  - admonition
+  - footnotes
+  - codehilite:
+      guess_lang: false
+      linenums: true
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
